@@ -7,8 +7,6 @@ import matplotlib.gridspec as gridspec
 plt.rcParams['font.family'] = 'Malgun Gothic'
 plt.rcParams['axes.unicode_minus'] = False
 
-# ── 1. DATA DOWNLOAD ─────────────────────────────────────────────────────────
-
 def download_weather(station_id, start_year=1980, end_year=2024):
     filename = f"weather_{station_id}_{start_year}-{end_year}.csv"
     if not os.path.exists(filename):
@@ -23,14 +21,10 @@ def download_weather(station_id, start_year=1980, end_year=2024):
         print(f"Already exists: {filename}")
     return filename
 
-# ── 2. DATA LOADING ──────────────────────────────────────────────────────────
-
 def load_data(filename):
     df = pd.read_csv(filename, skipinitialspace=True)
     df.columns = df.columns.str.strip()
     return df
-
-# ── 3. STATISTICS ────────────────────────────────────────────────────────────
 
 def print_statistics(df_jeonju, df_suwon):
     print("\n" + "=" * 55)
@@ -70,8 +64,6 @@ def print_statistics(df_jeonju, df_suwon):
     print(f"수원 가장 더운 해: {avg_s.idxmax()}년 ({avg_s.max():.1f}°C)")
     print(f"수원 가장 추운 해: {avg_s.idxmin()}년 ({avg_s.min():.1f}°C)")
 
-# ── 4. BIRTHDAY ANALYSIS ─────────────────────────────────────────────────────
-
 def birthday_analysis(df, birth_month, birth_day, birth_year, city_name):
     bday = df[(df['month'] == birth_month) & (df['day'] == birth_day)].copy()
     subset = bday[(bday['year'] >= 1980) & (bday['year'] <= 2024)].sort_values('tavg', ascending=False).reset_index(drop=True)
@@ -83,8 +75,6 @@ def birthday_analysis(df, birth_month, birth_day, birth_year, city_name):
         print(f"  출생년도 {birth_year}년: {rank_row.iloc[0]['tavg']:.1f}°C  →  {total}년 중 {rank}위 (더운 순)")
         print(f"  가장 더운 해: {int(subset.iloc[0]['year'])}년 ({subset.iloc[0]['tavg']:.1f}°C)")
         print(f"  가장 추운 해: {int(subset.iloc[-1]['year'])}년 ({subset.iloc[-1]['tavg']:.1f}°C)")
-
-# ── 5. CHARTS ────────────────────────────────────────────────────────────────
 
 def plot_all(df_j, df_s):
     avg_j = df_j.groupby('year')['tavg'].mean()
@@ -149,7 +139,6 @@ def plot_all(df_j, df_s):
     print("\n그래프 저장됨: weather_dashboard.png")
     plt.show()
 
-# ── MAIN ─────────────────────────────────────────────────────────────────────
 
 def main():
     print("=" * 55)
